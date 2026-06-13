@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Card, Checkbox, IconButton} from "@mui/material";
+import {Box, Card, Checkbox, IconButton} from "@mui/material";
 
 export const ToDoCheckBox = styled(Checkbox)`
   && {
@@ -15,14 +15,15 @@ export const ToDoCheckBox = styled(Checkbox)`
   }
 `
 
-export const ToDoInfo = styled.div`
+export const ToDoInfo = styled(Box)`
   display: grid;
   width: 50%;
   grid-template-columns: auto 1fr 200px;
   align-items: center;
+  gap: 10px;
 `
 
-export const ToDoActions = styled.div`
+export const ToDoActions = styled(Box)`
   display: flex;
   gap: 10px;
 `
@@ -55,6 +56,10 @@ export const ToDoCard = styled(Card)`
     background-color: black;
     color: white;
     cursor: pointer;
+  }
+
+  && ${ToDoCheckBox} {
+    color: black;
   }
   
   &&:hover ${ToDoCheckBox} {
