@@ -4,8 +4,11 @@ import React, {useState} from "react";
 import {addTodoToLocalStorage, getTodoId} from "../../utils/localStorage";
 import type {Todo} from "../../types/todo";
 
+interface AddToDoProps {
+    onAdd: () => void;
+}
 
-export default function AddToDo({onAdd}) {
+export default function AddToDo({onAdd}: AddToDoProps) {
     const [ToDoName, setToDoName] = useState("");
     const [warningVisible, setWarningVisible] = useState(false);
 
@@ -23,6 +26,7 @@ export default function AddToDo({onAdd}) {
              addTodoToLocalStorage(todo);
              setWarningVisible(false);
              onAdd();
+             setToDoName("")
          }
     }
 

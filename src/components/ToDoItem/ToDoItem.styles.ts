@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Box, Card, Checkbox, IconButton} from "@mui/material";
+import {Box, Card, Checkbox, IconButton, TextField} from "@mui/material";
 
 export const ToDoCheckBox = styled(Checkbox)`
   && {
@@ -38,6 +38,29 @@ export const ToDoIconButton = styled(IconButton)`
   }
 `
 
+export const TodoTextField = styled(TextField)`
+  && {
+    height: 100%;
+  }
+
+  && * {
+    border-radius: 5px;
+  }
+      & .MuiOutlinedInput-notchedOutline {
+      border: 1px solid black;
+      }
+
+      && div {
+        height: 100%;
+      }
+      
+      && input {
+        padding: 0 10px;
+        height: 100%;
+        background-color: transparent;
+      }
+`
+
 export const ToDoCard = styled(Card)`
   && {
     border: 1px solid black;
@@ -68,5 +91,13 @@ export const ToDoCard = styled(Card)`
 
   &&:hover ${ToDoIconButton} {
     color: white;
+  }
+
+  &&:hover ${TodoTextField} input {
+    background-color: white;
+    color: black;
+  }
+  &&:hover ${TodoTextField} div {
+    background-color: black;
   }
 `
