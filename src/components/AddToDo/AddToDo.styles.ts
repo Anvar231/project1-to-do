@@ -20,7 +20,6 @@ export const AddIconButton = styled(IconButton)`
 export const AddToDoBox = styled(Box)`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 20px;
   column-gap: 30px;
   row-gap: 10px;
 `

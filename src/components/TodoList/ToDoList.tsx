@@ -1,29 +1,94 @@
-import {getTodosFromLocalStorage} from "../../utils/localStorage";
+import {
+    getTodosFromLocalStorage, saveTodosToLocalStorage,
+} from "../../utils/localStorage";
 import ToDoItem from "../ToDoItem/ToDoItem";
 import {ListUl, SortBox} from "./ToDoList.styles.ts";
 import AddToDo from "../AddToDo/AddToDo";
-import {useState} from "react";
-import {MenuItem, Select} from "@mui/material";
+import {useState, useEffect} from "react";
+import {MenuItem, Select, Typography} from "@mui/material";
+import type {SelectChangeEvent} from "@mui/material"
+import {sortTodos} from "../../utils/sortTodos";
+import type {Todo} from "../../types/todo";
+import type {SortByCompleted, SortByDate} from "../../types/sortTypes";
 
 export default function ToDoList() {
-    const [todos, setToDos] = useState(getTodosFromLocalStorage());
+    const [todos, setTodos] = useState(() => getTodosFromLocalStorage());
 
-    const [sortByDate, setSortByDate] = useState("new");
-    const [sortByCompleted, setSortByCompleted] = useState("all");
+    const [sortByDate, setSortByDate] = useState<SortByDate>("new");
+    const [sortByCompleted, setSortByCompleted] = useState<SortByCompleted>("all");
 
-    const [editTodo, setEditMode] = useState(-1);
+    const [editId, setEditId] = useState(-1);
+
+    const sortedTodos = sortTodos(todos, sortByCompleted, sortByDate);
+
+    useEffect(() => {
+        saveTodosToLocalStorage(todos)
+    }, [todos]);
 
 
-    function handleAdd() {
-        setToDos(getTodosFromLocalStorage())
+    function handleChangeSortByDate(e: SelectChangeEvent) {
+        const value = e.target.value;
+        if (value === "old" || value === "new")
+            setSortByDate(value);
     }
 
-    function handleChangeSortByDate(e) {
-        setSortByDate(e.target.value);
+    function handleChangeSortByCompleted(e: SelectChangeEvent) {
+        const value = e.target.value;
+        if (value === "all" || value === "completed" || value === "non-completed")
+            setSortByCompleted(value);
     }
 
-    function handleChangeSortByCompleted(e) {
-        setSortByCompleted(e.target.value);
+
+    function handleDelete(id:number) {
+        setTodos(list => (
+            list.filter(item => item.id !== id)
+        ));
+    }
+
+    function handleToggle(id: number) {
+        setTodos(list => (
+            list.map(item => (
+                item.id === id?
+                    {
+                        ...item,
+                        completed: !item.completed,
+                    }
+                    :
+                    item
+            ))
+        ));
+    }
+
+    function handleEditId(id: number) {
+        setEditId(id);
+    }
+
+    function handleEdit(id: number, editedText: string) {
+        setTodos(list => (
+            list.map(item => (
+                item.id !== id?
+                    item
+                    :
+                    {
+                        ...item,
+                        text: editedText
+                    }
+            ))
+        ))
+        setEditId(-1);
+    }
+
+    function handleAdd(text: string) {
+        const todo: Todo = {
+            id: todos.length ? Math.max(...todos.map(item => item.id)) + 1 : 0,
+            text: text,
+            completed: false,
+            createdAt: new Date().toISOString()
+        }
+        setTodos(list => [
+            ...list,
+            todo,
+        ])
     }
 
     return (
@@ -50,18 +115,26 @@ export default function ToDoList() {
             </SortBox>
 
             <ListUl>
-                {todos.map(item => (
+                {sortedTodos.length > 0 ? (
+                    sortedTodos.map(item => (
                     <ToDoItem
                         key={item.id}
                         id={item.id}
                         text={item.text}
                         completed={item.completed}
                         createdAt={item.createdAt}
-                        onChange={handleAdd}
-                        editMode={item.id === editTodo}
-                        onEdit={setEditMode}
+                        isEditing={item.id === editId}
+                        onEditId={handleEditId}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onToggle={handleToggle}
                     ></ToDoItem>
-                ))}
+                    )))
+                        :
+                    (
+                        <Typography>Нет задач</Typography>
+                    )
+                }
             </ListUl>
         </>
     );

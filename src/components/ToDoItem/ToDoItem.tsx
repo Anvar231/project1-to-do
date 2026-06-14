@@ -5,63 +5,53 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import type {Todo} from "../../types/todo";
 import {formatDate} from "../../utils/formatDate";
-import {deleteTodoFromLocalStorage, editTodoFromLocalStorage, toggleCompleted} from "../../utils/localStorage";
 import React, {useState, useEffect, useRef} from "react";
 
 interface ToDoItemProps extends Todo{
-    onChange: () => void;
-    editMode: boolean;
-    onEdit: (id: number) => void;
+    isEditing: boolean;
+    onEditId: (id: number) => void;
+    onEdit: (id: number, editedText: string) => void;
+    onDelete: (id: number) => void;
+    onToggle: (id: number) => void;
 }
 
-export default function ToDoItem({id, text, completed, createdAt, onChange, editMode, onEdit}: ToDoItemProps) {
+export default function ToDoItem({id, text, completed, createdAt, onEditId, isEditing, onEdit, onDelete, onToggle}: ToDoItemProps) {
     const [editText, setEditText] = useState(text);
     const [error, setError] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const date = formatDate(createdAt);
 
     useEffect(() => {
-        if (editMode)
+        if (isEditing)
             inputRef.current?.focus();
-    }, [editMode]);
+    }, [isEditing]);
 
 
-
-    function handleDelete() {
-        deleteTodoFromLocalStorage(id);
-        onChange();
+    function handleEditId() {
+        setEditText(text);
+        onEditId(id);
     }
 
-    function handleEdit() {
-        onEdit(id);
-    }
-
-    function handleConfirm() {
+    function handleConfirmEdit() {
         if (!editText.trim()) {
             setError(true);
             return;
         }
-        editTodoFromLocalStorage(id, editText);
-        onEdit(-1);
-        onChange();
+        setError(false);
+        onEdit(id, editText);
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setEditText(e.target.value);
     }
 
-    function handleToggle() {
-        toggleCompleted(id);
-        onChange();
-    }
-
     return (
         <ToDoCard>
             <ToDoInfo>
-                <ToDoCheckBox checked={completed} onClick={handleToggle}/>
+                <ToDoCheckBox checked={completed} onChange={() => onToggle(id)}/>
 
                 {
-                    editMode?
+                    isEditing?
                     <TodoTextField
                         value={editText}
                         onChange={handleChange}
@@ -77,16 +67,16 @@ export default function ToDoItem({id, text, completed, createdAt, onChange, edit
 
             <ToDoActions>
                 {
-                    editMode?
-                        <ToDoIconButton onClick={handleConfirm}>
+                    isEditing?
+                        <ToDoIconButton onClick={handleConfirmEdit}>
                             <CheckIcon />
                         </ToDoIconButton>
                     :
                         <>
-                            <ToDoIconButton onClick={handleEdit}>
+                            <ToDoIconButton onClick={handleEditId}>
                                 <EditIcon/>
                             </ToDoIconButton>
-                            <ToDoIconButton onClick={handleDelete}>
+                            <ToDoIconButton onClick={() => onDelete(id)}>
                                 <DeleteIcon />
                             </ToDoIconButton>
                         </>
