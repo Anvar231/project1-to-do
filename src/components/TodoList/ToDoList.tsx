@@ -5,7 +5,7 @@ import ToDoItem from "../ToDoItem/ToDoItem";
 import {ListUl, SortBox, StyledSelect} from "./ToDoList.styles.ts";
 import AddToDo from "../AddToDo/AddToDo";
 import {useState, useEffect, useContext} from "react";
-import {MenuItem, Select, Typography} from "@mui/material";
+import {MenuItem, Typography} from "@mui/material";
 import type {SelectChangeEvent} from "@mui/material"
 import {sortTodos} from "../../utils/sortTodos";
 import type {Todo} from "../../types/todo";
@@ -28,13 +28,13 @@ export default function ToDoList() {
     }, [todos]);
 
 
-    function handleChangeSortByDate(e: SelectChangeEvent) {
+    function handleChangeSortByDate(e: SelectChangeEvent<unknown>) {
         const value = e.target.value;
         if (value === "old" || value === "new")
             setSortByDate(value);
     }
 
-    function handleChangeSortByCompleted(e: SelectChangeEvent) {
+    function handleChangeSortByCompleted(e: SelectChangeEvent<unknown>) {
         const value = e.target.value;
         if (value === "all" || value === "completed" || value === "non-completed")
             setSortByCompleted(value);

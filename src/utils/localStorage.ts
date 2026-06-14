@@ -14,7 +14,9 @@ export const saveTodosToLocalStorage = (todos: Todo[]):void => {
 };
 
 export const getThemeFromLocalStorage = (): Theme | undefined => {
-    return localStorage.getItem(THEME_KEY);
+    const theme = localStorage.getItem(THEME_KEY);
+    if (theme === "light" || theme === "dark")
+        return undefined;
 }
 
 export const saveThemToLocalStorage = (theme: Theme) => {

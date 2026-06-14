@@ -13,7 +13,7 @@ export const SortBox = styled(Box)`
   gap: 20px;
 `
 
-export const StyledSelect = styled(Select)<{$lightMode}>`
+export const StyledSelect = styled(Select)<{$lightMode: boolean}>`
     && {
       background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
       color: ${({$lightMode}) => ($lightMode? "black": "white")};

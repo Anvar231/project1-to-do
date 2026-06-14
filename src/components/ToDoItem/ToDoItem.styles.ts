@@ -34,7 +34,7 @@ export const ToDoIconButton = styled(IconButton)<{$lightMode: boolean}>`
   }
 `
 
-export const TodoTextField = styled(TextField)<{$lightMode}>`
+export const TodoTextField = styled(TextField)<{$lightMode: boolean}>`
   && {
     height: 100%;
   }
@@ -70,7 +70,7 @@ export const TodoTextField = styled(TextField)<{$lightMode}>`
   
 `
 
-export const ToDoCard = styled(Card)<{$lightMode}>`
+export const ToDoCard = styled(Card)<{$lightMode: boolean}>`
   && {
     border: 1px solid ${({$lightMode}) => ($lightMode? "black": "white")};
     padding: 0 20px;
