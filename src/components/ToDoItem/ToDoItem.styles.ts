@@ -5,10 +5,6 @@ export const ToDoCheckBox = styled(Checkbox)`
   && {
     transition: 0.2s;
   }
-  
-  &&.Mui-checked {
-    color: black;
-  }
 
   &&:hover {
     transform: scale(1.3);
@@ -28,9 +24,9 @@ export const ToDoActions = styled(Box)`
   gap: 10px;
 `
 
-export const ToDoIconButton = styled(IconButton)`
+export const ToDoIconButton = styled(IconButton)<{$lightMode: boolean}>`
   && {
-    color: black;
+    color: ${({$lightMode}) => ($lightMode? "black": "white")};
     transition: 0.2s;
   }
   &&:hover {
@@ -38,7 +34,7 @@ export const ToDoIconButton = styled(IconButton)`
   }
 `
 
-export const TodoTextField = styled(TextField)`
+export const TodoTextField = styled(TextField)<{$lightMode}>`
   && {
     height: 100%;
   }
@@ -47,7 +43,11 @@ export const TodoTextField = styled(TextField)`
     border-radius: 5px;
   }
       & .MuiOutlinedInput-notchedOutline {
-      border: 1px solid black;
+        border: 1px solid ${({$lightMode}) => ($lightMode? "black" : "white")};
+      }
+
+      &&:hover .MuiOutlinedInput-notchedOutline {
+        border: 1px solid ${({$lightMode}) => ($lightMode? "black" : "white")};
       }
 
       && div {
@@ -57,13 +57,22 @@ export const TodoTextField = styled(TextField)`
       && input {
         padding: 0 10px;
         height: 100%;
-        background-color: transparent;
+        background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
+        color: ${({$lightMode}) => ($lightMode? "black": "white")};
       }
+
+      && input:hover {
+        padding: 0 10px;
+        height: 100%;
+        background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
+        color: ${({$lightMode}) => ($lightMode? "black": "white")};
+      }
+  
 `
 
-export const ToDoCard = styled(Card)`
+export const ToDoCard = styled(Card)<{$lightMode}>`
   && {
-    border: 1px solid black;
+    border: 1px solid ${({$lightMode}) => ($lightMode? "black": "white")};
     padding: 0 20px;
     border-radius: 5px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
@@ -72,32 +81,31 @@ export const ToDoCard = styled(Card)`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
+    color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    color: ${({$lightMode}) => ($lightMode? "black": "white")};
   }
 
   &&:hover {
     border: 1px solid blue;
-    background-color: black;
-    color: white;
+    background-color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    color: ${({$lightMode}) => ($lightMode? "white": "black")};
     cursor: pointer;
   }
 
   && ${ToDoCheckBox} {
-    color: black;
+    color: ${({$lightMode}) => ($lightMode? "black": "white")};
   }
   
   &&:hover ${ToDoCheckBox} {
-    color: white;
+    color: ${({$lightMode}) => ($lightMode? "white" : "black")};
   }
 
   &&:hover ${ToDoIconButton} {
-    color: white;
+    color: ${({$lightMode}) => ($lightMode? "white" : "black")};
   }
 
-  &&:hover ${TodoTextField} input {
-    background-color: white;
-    color: black;
-  }
   &&:hover ${TodoTextField} div {
-    background-color: black;
+    background-color: ${({$lightMode}) => ($lightMode? "black": "white")};
   }
 `

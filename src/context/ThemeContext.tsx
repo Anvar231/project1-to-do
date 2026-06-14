@@ -1,18 +1,23 @@
 import {createContext,
         useState,
+        useEffect,
         type Dispatch,
         type ReactNode,
-        type SetStateAction,} from "react";
+        type SetStateAction} from "react";
+import {GlobalStyle} from "./GlobalStyle";
+import {getThemeFromLocalStorage, saveThemToLocalStorage} from "../utils/localStorage";
 
-type Theme = "light" | "dark";
+export type Theme = "light" | "dark";
 
 type ThemeContextType = [
     Theme,
     Dispatch<SetStateAction<Theme>>
 ];
 
-const ThemeContext = createContext<ThemeContextType>([
-    "light",
+const initialTheme = getThemeFromLocalStorage() || "light";
+
+export const ThemeContext = createContext<ThemeContextType>([
+    initialTheme,
     () => {},
 ])
 
@@ -21,10 +26,15 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({children}: ThemeProviderProps) {
-    const [theme, setTheme] = useState<Theme>("light")
+    const [theme, setTheme] = useState<Theme>(initialTheme)
+
+    useEffect(() => {
+        saveThemToLocalStorage(theme);
+    }, [theme]);
 
     return (
         <ThemeContext.Provider value={[theme, setTheme]}>
+            <GlobalStyle $lightMode={theme === "light"}/>
             {children}
         </ThemeContext.Provider>
     );

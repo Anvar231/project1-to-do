@@ -2,14 +2,15 @@ import {
     getTodosFromLocalStorage, saveTodosToLocalStorage,
 } from "../../utils/localStorage";
 import ToDoItem from "../ToDoItem/ToDoItem";
-import {ListUl, SortBox} from "./ToDoList.styles.ts";
+import {ListUl, SortBox, StyledSelect} from "./ToDoList.styles.ts";
 import AddToDo from "../AddToDo/AddToDo";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import {MenuItem, Select, Typography} from "@mui/material";
 import type {SelectChangeEvent} from "@mui/material"
 import {sortTodos} from "../../utils/sortTodos";
 import type {Todo} from "../../types/todo";
 import type {SortByCompleted, SortByDate} from "../../types/sortTypes";
+import {ThemeContext} from "../../context/ThemeContext";
 
 export default function ToDoList() {
     const [todos, setTodos] = useState(() => getTodosFromLocalStorage());
@@ -18,6 +19,7 @@ export default function ToDoList() {
     const [sortByCompleted, setSortByCompleted] = useState<SortByCompleted>("all");
 
     const [editId, setEditId] = useState(-1);
+    const [currenTheme] = useContext(ThemeContext);
 
     const sortedTodos = sortTodos(todos, sortByCompleted, sortByDate);
 
@@ -96,22 +98,24 @@ export default function ToDoList() {
             <AddToDo onAdd={handleAdd}/>
 
             <SortBox>
-                <Select
+                <StyledSelect
                     value={sortByDate}
                     onChange={handleChangeSortByDate}
+                    $lightMode={currenTheme === "light"}
                 >
                     <MenuItem value="new">Сначала новые</MenuItem>
                     <MenuItem value="old">Сначала старые</MenuItem>
-                </Select>
+                </StyledSelect>
 
-                <Select
+                <StyledSelect
                     value={sortByCompleted}
                     onChange={handleChangeSortByCompleted}
+                    $lightMode={currenTheme === "light"}
                 >
                     <MenuItem value="all">Все</MenuItem>
                     <MenuItem value="completed">Готовые</MenuItem>
                     <MenuItem value="non-completed">Не готовые</MenuItem>
-                </Select>
+                </StyledSelect>
             </SortBox>
 
             <ListUl>
