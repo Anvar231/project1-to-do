@@ -5,8 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import type {Todo} from "../../types/todo";
 import {formatDate} from "../../utils/formatDate";
-import React, {useState, useEffect, useRef, useContext} from "react";
-import {ThemeContext} from "../../context/ThemeContext";
+import React, {useState, useEffect, useRef} from "react";
 
 interface ToDoItemProps extends Todo{
     isEditing: boolean;
@@ -20,7 +19,6 @@ export default function ToDoItem({id, text, completed, createdAt, onEditId, isEd
     const [editText, setEditText] = useState(text);
     const [error, setError] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [currentTheme] = useContext(ThemeContext);
     const date = formatDate(createdAt);
 
     useEffect(() => {
@@ -48,7 +46,7 @@ export default function ToDoItem({id, text, completed, createdAt, onEditId, isEd
     }
 
     return (
-        <ToDoCard $lightMode={currentTheme === "light"}>
+        <ToDoCard>
             <ToDoInfo>
                 <ToDoCheckBox
                     checked={completed}
@@ -62,7 +60,6 @@ export default function ToDoItem({id, text, completed, createdAt, onEditId, isEd
                         onChange={handleChange}
                         error={error}
                         inputRef={inputRef}
-                        $lightMode={currentTheme === "light"}
                     ></TodoTextField>
                     :
                     <Typography variant="h6">{text}</Typography>
@@ -74,15 +71,15 @@ export default function ToDoItem({id, text, completed, createdAt, onEditId, isEd
             <ToDoActions>
                 {
                     isEditing?
-                        <ToDoIconButton onClick={handleConfirmEdit} $lightMode={currentTheme === "light"}>
+                        <ToDoIconButton onClick={handleConfirmEdit}>
                             <CheckIcon />
                         </ToDoIconButton>
                     :
                         <>
-                            <ToDoIconButton onClick={handleEditId} $lightMode={currentTheme === "light"}>
+                            <ToDoIconButton onClick={handleEditId}>
                                 <EditIcon/>
                             </ToDoIconButton>
-                            <ToDoIconButton onClick={() => onDelete(id)} $lightMode={currentTheme === "light"}>
+                            <ToDoIconButton onClick={() => onDelete(id)}>
                                 <DeleteIcon />
                             </ToDoIconButton>
                         </>

@@ -24,17 +24,17 @@ export const ToDoActions = styled(Box)`
   gap: 10px;
 `
 
-export const ToDoIconButton = styled(IconButton)<{$lightMode: boolean}>`
+export const ToDoIconButton = styled(IconButton)`
   && {
-    color: ${({$lightMode}) => ($lightMode? "black": "white")};
-    transition: 0.2s;
+    color: ${({theme}) => (theme.secondary)};
+    transition: ${({theme}) => (theme.transition)};
   }
   &&:hover {
     transform: scale(1.3);
   }
 `
 
-export const TodoTextField = styled(TextField)<{$lightMode: boolean}>`
+export const TodoTextField = styled(TextField)`
   && {
     height: 100%;
   }
@@ -43,11 +43,11 @@ export const TodoTextField = styled(TextField)<{$lightMode: boolean}>`
     border-radius: 5px;
   }
       & .MuiOutlinedInput-notchedOutline {
-        border: 1px solid ${({$lightMode}) => ($lightMode? "black" : "white")};
+        border: 1px solid ${({theme}) => (theme.secondary)};
       }
 
       &&:hover .MuiOutlinedInput-notchedOutline {
-        border: 1px solid ${({$lightMode}) => ($lightMode? "black" : "white")};
+        border: 1px solid ${({theme}) => (theme.secondary)};
       }
 
       && div {
@@ -57,55 +57,55 @@ export const TodoTextField = styled(TextField)<{$lightMode: boolean}>`
       && input {
         padding: 0 10px;
         height: 100%;
-        background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
-        color: ${({$lightMode}) => ($lightMode? "black": "white")};
+        background-color: ${({theme}) => (theme.primary)};
+        color: ${({theme}) => (theme.secondary)};
       }
 
       && input:hover {
         padding: 0 10px;
         height: 100%;
-        background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
-        color: ${({$lightMode}) => ($lightMode? "black": "white")};
+        background-color: ${({theme}) => (theme.primary)};
+        color: ${({theme}) => (theme.secondary)};
       }
   
 `
 
-export const ToDoCard = styled(Card)<{$lightMode: boolean}>`
+export const ToDoCard = styled(Card)`
   && {
-    border: 1px solid ${({$lightMode}) => ($lightMode? "black": "white")};
+    border: 1px solid ${({theme}) => (theme.secondary)};
     padding: 0 20px;
     border-radius: 5px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-    transition: 0.3s;
+    transition: ${({theme}) => (theme.transition)};
     min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
-    color: ${({$lightMode}) => ($lightMode? "black": "white")};
-    color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    background-color: ${({theme}) => (theme.primary)};
+    color: ${({theme}) => (theme.secondary)};
+    color: ${({theme}) => (theme.secondary)};
   }
 
   &&:hover {
     border: 1px solid blue;
-    background-color: ${({$lightMode}) => ($lightMode? "black": "white")};
-    color: ${({$lightMode}) => ($lightMode? "white": "black")};
+    background-color: ${({theme}) => (theme.secondary)};
+    color: ${({theme}) => (theme.primary)};
     cursor: pointer;
   }
 
   && ${ToDoCheckBox} {
-    color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    color: ${({theme}) => (theme.secondary)};
   }
   
   &&:hover ${ToDoCheckBox} {
-    color: ${({$lightMode}) => ($lightMode? "white" : "black")};
+    color: ${({theme}) => (theme.primary)};
   }
 
   &&:hover ${ToDoIconButton} {
-    color: ${({$lightMode}) => ($lightMode? "white" : "black")};
+    color: ${({theme}) => (theme.primary)};
   }
 
   &&:hover ${TodoTextField} div {
-    background-color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    background-color: ${({theme}) => (theme.secondary)};
   }
 `

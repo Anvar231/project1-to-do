@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Box, Select} from "@mui/material";
+import {Box, Select, Typography} from "@mui/material";
 
 export const ListUl = styled.ul`
   display: flex;
@@ -13,14 +13,19 @@ export const SortBox = styled(Box)`
   gap: 20px;
 `
 
-export const StyledSelect = styled(Select)<{$lightMode: boolean}>`
+export const StyledSelect = styled(Select)`
     && {
-      background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
-      color: ${({$lightMode}) => ($lightMode? "black": "white")};
-      border: 1px solid ${({$lightMode}) => ($lightMode? "black": "white")};
+      background-color: ${({theme}) => (theme.primary)};
+      color: ${({theme}) => (theme.secondary)};
+      border: 1px solid ${({theme}) => (theme.secondary)};
+      transition: ${({theme}) => (theme.transition)};
 
       && .MuiSvgIcon-root {
-            color: ${({$lightMode}) => ($lightMode? "black": "white")};
+            color: ${({theme}) => (theme.secondary)};
         }
     }
+`
+
+export const StyledTypography = styled(Typography)`
+    color: ${({theme}) => (theme.secondary)};
 `

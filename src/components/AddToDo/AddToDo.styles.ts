@@ -1,20 +1,20 @@
 import styled from "styled-components";
 import {Box, IconButton, TextField, Typography} from "@mui/material";
 
-export const AddIconButton = styled(IconButton)<{$lightMode: boolean}>`
+export const AddIconButton = styled(IconButton)`
   && {
     width: 50px;
-    background-color: ${({$lightMode}) => ($lightMode? "white": "black")};
-    color: ${({$lightMode}) => ($lightMode? "black" : "white")};
-    border: 1px solid ${({$lightMode}) => ($lightMode? "black" : "white")};
+    background-color: ${({theme}) => (theme.primary)};
+    color: ${({theme}) => (theme.secondary)};
+    border: 1px solid ${({theme}) => (theme.secondary)};
     border-radius: 5px;
-    transition: 0.3s;
+    transition: ${({theme}) => (theme.transition)};
   }
   
   &&:hover {
     border: 1px solid blue;
-    background-color: ${({$lightMode}) => ($lightMode? "black" : "white")};
-    color: ${({$lightMode}) => ($lightMode? "white": "black")};
+    background-color: ${({theme}) => (theme.secondary)};
+    color: ${({theme}) => (theme.primary)};
   }
 `
 
@@ -25,30 +25,30 @@ export const AddToDoBox = styled(Box)`
   row-gap: 10px;
 `
 
-export const AddTextField = styled(TextField)<{$lightMode: boolean}>`
+export const AddTextField = styled(TextField)`
   && input {
     height: 100%;
-    color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    color: ${({theme}) => (theme.secondary)};
   }
   
   && {
     flex: 1;
     border-radius: 5px;
-    background-color: ${({$lightMode}) => ($lightMode? "white" : "black")};
-    transition: 0.3s;
+    background-color: ${({theme}) => (theme.primary)};
+    transition: ${({theme}) => (theme.transition)};
   }
   
   && .MuiInputLabel-root {
-    color: ${({$lightMode}) => ($lightMode? "black": "white")};
+    color: ${({theme}) => (theme.secondary)};
   }
 
   & .MuiOutlinedInput-root {
     & fieldset {
-      border-color: ${({$lightMode}) => ($lightMode? "black": "white")};
+      border-color: ${({theme}) => (theme.secondary)};
     }
     
     &:hover fieldset{
-      border-color: ${({$lightMode}) => ($lightMode? "black": "white")};
+      border-color: ${({theme}) => (theme.secondary)};
     }
     
   }

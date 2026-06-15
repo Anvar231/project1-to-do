@@ -1,7 +1,6 @@
 import {AddIconButton, AddToDoBox, AddTextField, Warning} from "./AddToDo.styles";
 import AddIcon from "@mui/icons-material/Add";
-import React, {useContext, useState} from "react";
-import {ThemeContext} from "../../context/ThemeContext";
+import React, {useState} from "react";
 
 interface AddToDoProps {
     onAdd: (text: string) => void;
@@ -10,7 +9,6 @@ interface AddToDoProps {
 export default function AddToDo({onAdd}: AddToDoProps) {
     const [ToDoName, setToDoName] = useState("");
     const [warningVisible, setWarningVisible] = useState(false);
-    const [currentTheme] = useContext(ThemeContext);
 
     function handleClick() {
          if (!ToDoName.trim()) {
@@ -31,9 +29,9 @@ export default function AddToDo({onAdd}: AddToDoProps) {
     return (
         <>
             <AddToDoBox>
-                <AddTextField label="Название задачи" value={ToDoName} onChange={handleChange} $lightMode={currentTheme === "light"}/>
+                <AddTextField label="Название задачи" value={ToDoName} onChange={handleChange}/>
 
-                <AddIconButton onClick={handleClick} $lightMode={currentTheme === "light"}>
+                <AddIconButton onClick={handleClick}>
                     <AddIcon></AddIcon>
                 </AddIconButton>
                 <Warning variant="body2" color="error" $visible={warningVisible}>Название не может быть пустым</Warning>
