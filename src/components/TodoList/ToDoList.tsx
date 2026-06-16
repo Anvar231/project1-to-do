@@ -1,95 +1,63 @@
-import {
-    getTodosFromLocalStorage, saveTodosToLocalStorage,
-} from "../../utils/localStorage";
-import ToDoItem from "../ToDoItem/ToDoItem";
-import {ListUl, SortBox, StyledSelect, StyledTypography} from "./ToDoList.styles.ts";
+import {getTodosFromLocalStorage, saveTodosToLocalStorage,} from "../../utils/localStorage";
+import {SortBox, StyledSelect} from "./ToDoList.styles.ts";
 import AddToDo from "../AddToDo/AddToDo";
-import {useState, useEffect} from "react";
-import {MenuItem} from "@mui/material";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import type {SelectChangeEvent} from "@mui/material"
+import {MenuItem} from "@mui/material";
 import {sortTodos} from "../../utils/sortTodos";
 import type {Todo} from "../../types/todo";
-import type {SortByCompleted, SortByDate} from "../../types/sortTypes";
+import {SortByCompleted, SortByDate} from "../../types/sortTypes";
+import SortedToDoList from "../SortedToDoList/SortedToDoList";
 
 export default function ToDoList() {
     const [todos, setTodos] = useState(() => getTodosFromLocalStorage());
 
-    const [sortByDate, setSortByDate] = useState<SortByDate>("new");
-    const [sortByCompleted, setSortByCompleted] = useState<SortByCompleted>("all");
+    const [sortByDate, setSortByDate] = useState<SortByDate>(SortByDate.new);
+    const [sortByCompleted, setSortByCompleted] = useState<SortByCompleted>(SortByCompleted.all);
 
-    const [editId, setEditId] = useState(-1);
+    const sortedTodos = useMemo(
+        () => sortTodos(todos, sortByCompleted, sortByDate),
+        [todos, sortByCompleted, sortByDate]
+    );
 
-    const sortedTodos = sortTodos(todos, sortByCompleted, sortByDate);
 
     useEffect(() => {
         saveTodosToLocalStorage(todos)
     }, [todos]);
 
+    const  handleChangeSortByDate = useCallback(
+        (e: SelectChangeEvent<unknown>) => {
+            const value = e.target.value;
+            if (value === SortByDate.old || value === SortByDate.new)
+                setSortByDate(value);
+        },
+        [],
+    );
 
-    function handleChangeSortByDate(e: SelectChangeEvent<unknown>) {
-        const value = e.target.value;
-        if (value === "old" || value === "new")
-            setSortByDate(value);
-    }
+    const  handleChangeSortByCompleted = useCallback(
+        (e: SelectChangeEvent<unknown>) => {
+            const value = e.target.value;
+            if (value === SortByCompleted.all || value === SortByCompleted.completed || value === SortByCompleted.nonCompleted)
+                setSortByCompleted(value);
+        },
+        [],
+    );
 
-    function handleChangeSortByCompleted(e: SelectChangeEvent<unknown>) {
-        const value = e.target.value;
-        if (value === "all" || value === "completed" || value === "non-completed")
-            setSortByCompleted(value);
-    }
+    const handleAdd = useCallback(
+        (text: string) => {
+            setTodos(list => {
+                const todo: Todo = {
+                    id: list.length ? Math.max(...list.map(item => item.id)) + 1 : 0,
+                    text,
+                    completed: false,
+                    createdAt: new Date().toISOString(),
+                };
 
-
-    function handleDelete(id:number) {
-        setTodos(list => (
-            list.filter(item => item.id !== id)
-        ));
-    }
-
-    function handleToggle(id: number) {
-        setTodos(list => (
-            list.map(item => (
-                item.id === id?
-                    {
-                        ...item,
-                        completed: !item.completed,
-                    }
-                    :
-                    item
-            ))
-        ));
-    }
-
-    function handleEditId(id: number) {
-        setEditId(id);
-    }
-
-    function handleEdit(id: number, editedText: string) {
-        setTodos(list => (
-            list.map(item => (
-                item.id !== id?
-                    item
-                    :
-                    {
-                        ...item,
-                        text: editedText
-                    }
-            ))
-        ))
-        setEditId(-1);
-    }
-
-    function handleAdd(text: string) {
-        const todo: Todo = {
-            id: todos.length ? Math.max(...todos.map(item => item.id)) + 1 : 0,
-            text: text,
-            completed: false,
-            createdAt: new Date().toISOString()
-        }
-        setTodos(list => [
-            ...list,
-            todo,
-        ])
-    }
+                return [...list, todo];
+            });
+        },
+        [],
+    );
 
     return (
         <>
@@ -100,42 +68,21 @@ export default function ToDoList() {
                     value={sortByDate}
                     onChange={handleChangeSortByDate}
                 >
-                    <MenuItem value="new">Сначала новые</MenuItem>
-                    <MenuItem value="old">Сначала старые</MenuItem>
+                    <MenuItem value={SortByDate.new}>Сначала новые</MenuItem>
+                    <MenuItem value={SortByDate.old}>Сначала старые</MenuItem>
                 </StyledSelect>
 
                 <StyledSelect
                     value={sortByCompleted}
                     onChange={handleChangeSortByCompleted}
                 >
-                    <MenuItem value="all">Все</MenuItem>
-                    <MenuItem value="completed">Готовые</MenuItem>
-                    <MenuItem value="non-completed">Не готовые</MenuItem>
+                    <MenuItem value={SortByCompleted.all}>Все</MenuItem>
+                    <MenuItem value={SortByCompleted.completed}>Готовые</MenuItem>
+                    <MenuItem value={SortByCompleted.nonCompleted}>Не готовые</MenuItem>
                 </StyledSelect>
             </SortBox>
 
-            <ListUl>
-                {sortedTodos.length > 0 ? (
-                    sortedTodos.map(item => (
-                    <ToDoItem
-                        key={item.id}
-                        id={item.id}
-                        text={item.text}
-                        completed={item.completed}
-                        createdAt={item.createdAt}
-                        isEditing={item.id === editId}
-                        onEditId={handleEditId}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                        onToggle={handleToggle}
-                    ></ToDoItem>
-                    )))
-                        :
-                    (
-                        <StyledTypography>Нет задач</StyledTypography>
-                    )
-                }
-            </ListUl>
+            <SortedToDoList sortedTodos={sortedTodos} setTodos={setTodos}/>
         </>
     );
 }

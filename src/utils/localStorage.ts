@@ -5,8 +5,12 @@ const TODOS_KEY = "todos";
 const THEME_KEY = "theme";
 
 export const getTodosFromLocalStorage = ():Todo[] => {
-    const todos = localStorage.getItem(TODOS_KEY);
-    return todos?JSON.parse(todos):[];
+    try {
+        const todos = localStorage.getItem(TODOS_KEY);
+        return todos?JSON.parse(todos):[];
+    } catch {
+        return []
+    }
 }
 
 export const saveTodosToLocalStorage = (todos: Todo[]):void => {

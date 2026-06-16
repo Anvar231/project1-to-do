@@ -8,12 +8,12 @@ export const sortTodos = (list: Todo[], sortByCompleted: SortByCompleted, sortBy
             if (sortByCompleted === "non-completed") return !todo.completed;
             return true;
         })
-            .sort((a, b) => {
-                if (sortByDate === "new") {
-                    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-                }
+        .sort((a, b) => {
+            if (sortByDate === "new") {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            }
 
-                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-            })
+            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        })
     )
 }

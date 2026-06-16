@@ -1,35 +1,41 @@
 import {AddIconButton, AddToDoBox, AddTextField, Warning} from "./AddToDo.styles";
 import AddIcon from "@mui/icons-material/Add";
-import React, {useState} from "react";
+import React, {useState, useCallback, memo} from "react";
 
 interface AddToDoProps {
     onAdd: (text: string) => void;
 }
 
-export default function AddToDo({onAdd}: AddToDoProps) {
-    const [ToDoName, setToDoName] = useState("");
+const AddToDo = memo(function({onAdd}: AddToDoProps) {
+    const [toDoName, setToDoName] = useState("");
     const [warningVisible, setWarningVisible] = useState(false);
 
-    function handleClick() {
-         if (!ToDoName.trim()) {
-             setWarningVisible(true);
-         }
-         else{
-             setWarningVisible(false);
-             onAdd(ToDoName);
-             setToDoName("");
+    const handleClick = useCallback(
+        () => {
+            if (!toDoName.trim()) {
+                setWarningVisible(true);
+            }
+            else{
+                setWarningVisible(false);
+                onAdd(toDoName);
+                setToDoName("");
 
-         }
-    }
+            }
+        },
+        [toDoName, onAdd],
+    );
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setToDoName(e.target.value);
-    }
+    const handleChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            setToDoName(e.target.value);
+        },
+        [],
+    );
 
     return (
         <>
             <AddToDoBox>
-                <AddTextField label="Название задачи" value={ToDoName} onChange={handleChange}/>
+                <AddTextField label="Название задачи" value={toDoName} onChange={handleChange}/>
 
                 <AddIconButton onClick={handleClick}>
                     <AddIcon></AddIcon>
@@ -39,4 +45,6 @@ export default function AddToDo({onAdd}: AddToDoProps) {
 
         </>
     );
-}
+})
+
+export default AddToDo;

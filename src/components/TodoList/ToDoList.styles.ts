@@ -1,12 +1,5 @@
 import styled from "styled-components";
-import {Box, Select, Typography} from "@mui/material";
-
-export const ListUl = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-`
+import {Box, Select} from "@mui/material";
 
 export const SortBox = styled(Box)`
   display: flex;
@@ -26,6 +19,3 @@ export const StyledSelect = styled(Select)`
     }
 `
 
-export const StyledTypography = styled(Typography)`
-    color: ${({theme}) => (theme.secondary)};
-`

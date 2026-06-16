@@ -5,7 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import type {Todo} from "../../types/todo";
 import {formatDate} from "../../utils/formatDate";
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback, memo} from "react";
 
 interface ToDoItemProps extends Todo{
     isEditing: boolean;
@@ -15,7 +15,7 @@ interface ToDoItemProps extends Todo{
     onToggle: (id: number) => void;
 }
 
-export default function ToDoItem({id, text, completed, createdAt, onEditId, isEditing, onEdit, onDelete, onToggle}: ToDoItemProps) {
+const ToDoItem = memo(function ({id, text, completed, createdAt, onEditId, isEditing, onEdit, onDelete, onToggle}: ToDoItemProps) {
     const [editText, setEditText] = useState(text);
     const [error, setError] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -27,23 +27,32 @@ export default function ToDoItem({id, text, completed, createdAt, onEditId, isEd
     }, [isEditing]);
 
 
-    function handleEditId() {
-        setEditText(text);
-        onEditId(id);
-    }
+    const handleEditId = useCallback(
+        () => {
+            setEditText(text);
+            onEditId(id);
+        },
+        [id, text, onEditId],
+    );
 
-    function handleConfirmEdit() {
-        if (!editText.trim()) {
-            setError(true);
-            return;
-        }
-        setError(false);
-        onEdit(id, editText);
-    }
+    const handleConfirmEdit = useCallback(
+        () => {
+            if (!editText.trim()) {
+                setError(true);
+                return;
+            }
+            setError(false);
+            onEdit(id, editText);
+        },
+        [editText, onEdit, id],
+    );
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setEditText(e.target.value);
-    }
+    const handleChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            setEditText(e.target.value);
+        },
+        [],
+    );
 
     return (
         <ToDoCard>
@@ -88,4 +97,6 @@ export default function ToDoItem({id, text, completed, createdAt, onEditId, isEd
             </ToDoActions>
         </ToDoCard>
     );
-}
+})
+
+export default ToDoItem;

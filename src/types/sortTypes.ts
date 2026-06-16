@@ -1,2 +1,10 @@
-export type SortByDate = "new" | "old";
-export type SortByCompleted = "all" | "completed" | "non-completed"
+export enum SortByDate {
+    new = "new",
+    old = "old"
+}
+
+export enum SortByCompleted {
+    all = "all",
+    completed = "completed",
+    nonCompleted = "non-completed"
+}
