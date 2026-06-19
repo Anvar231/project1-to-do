@@ -1,10 +1,11 @@
 import type {Todo} from "./todo";
+import {LimitCount} from "./sortTypes";
 
 export interface SuccessResponse {
     data: Todo[];
     total: number;
     page: number;
-    limit: number;
+    limit: LimitCount;
     totalPages: number;
 }
 
