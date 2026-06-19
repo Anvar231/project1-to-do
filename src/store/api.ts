@@ -31,10 +31,10 @@ export const api = createApi({
         }),
 
         postTodo: builder.mutation<Todo, PostTodoProps> ({
-            query: ({text}) => ({
+            query: (body) => ({
                 url: "/todos",
                 method: "POST",
-                body: text
+                body,
             }),
             invalidatesTags: ["Todos"]
         }),

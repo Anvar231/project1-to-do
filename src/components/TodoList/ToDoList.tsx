@@ -1,29 +1,31 @@
-import {getTodosFromLocalStorage, saveTodosToLocalStorage,} from "../../utils/localStorage";
 import {SortBox, StyledSelect} from "./ToDoList.styles.ts";
 import AddToDo from "../AddToDo/AddToDo";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import type {SelectChangeEvent} from "@mui/material"
 import {MenuItem} from "@mui/material";
 import {sortTodos} from "../../utils/sortTodos";
-import type {Todo} from "../../types/todo";
 import {SortByCompleted, SortByDate} from "../../types/sortTypes";
 import SortedToDoList from "../SortedToDoList/SortedToDoList";
+import {useSearchParams} from "react-router-dom";
+import {useGetTodosQuery, usePostTodoMutation} from "../../store/api";
 
 export default function ToDoList() {
-    const [todos, setTodos] = useState(() => getTodosFromLocalStorage());
+    const [searchParams] = useSearchParams();
+    const page = Number(searchParams.get("page") ?? 1);
+    const limit = Number(searchParams.get("limit") ?? 10);
+
+    const {data} = useGetTodosQuery({page, limit});
+    const [addTodo] = usePostTodoMutation();
 
     const [sortByDate, setSortByDate] = useState<SortByDate>(SortByDate.new);
     const [sortByCompleted, setSortByCompleted] = useState<SortByCompleted>(SortByCompleted.all);
 
+    const todosData = data ? data.data : []
+
     const sortedTodos = useMemo(
-        () => sortTodos(todos, sortByCompleted, sortByDate),
-        [todos, sortByCompleted, sortByDate]
+        () => sortTodos(todosData, sortByCompleted, sortByDate),
+        [todosData, sortByCompleted, sortByDate]
     );
-
-
-    useEffect(() => {
-        saveTodosToLocalStorage(todos)
-    }, [todos]);
 
     const  handleChangeSortByDate = useCallback(
         (e: SelectChangeEvent<unknown>) => {
@@ -44,19 +46,10 @@ export default function ToDoList() {
     );
 
     const handleAdd = useCallback(
-        (text: string) => {
-            setTodos(list => {
-                const todo: Todo = {
-                    id: list.length ? Math.max(...list.map(item => item.id)) + 1 : 0,
-                    text,
-                    completed: false,
-                    createdAt: new Date().toISOString(),
-                };
-
-                return [...list, todo];
-            });
+        async (text: string) => {
+            await addTodo({text})
         },
-        [],
+        [addTodo],
     );
 
     return (
@@ -82,7 +75,7 @@ export default function ToDoList() {
                 </StyledSelect>
             </SortBox>
 
-            <SortedToDoList sortedTodos={sortedTodos} setTodos={setTodos}/>
+            <SortedToDoList sortedTodos={sortedTodos} />
         </>
     );
 }
