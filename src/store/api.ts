@@ -7,6 +7,7 @@ import type {
     SuccessResponse,
     ToggleTodoProps
 } from "../types/apiTypes";
+import type {Todo} from "../types/todo";
 
 const API_URL = "http://localhost:3001";
 
@@ -29,7 +30,7 @@ export const api = createApi({
             providesTags: ["Todos"]
         }),
 
-        postTodo: builder.mutation<Date, PostTodoProps> ({
+        postTodo: builder.mutation<Todo, PostTodoProps> ({
             query: ({text}) => ({
                 url: "/todos",
                 method: "POST",
@@ -38,7 +39,7 @@ export const api = createApi({
             invalidatesTags: ["Todos"]
         }),
 
-        putTodo: builder.mutation<Date, PutTodoProps> ({
+        putTodo: builder.mutation<Todo, PutTodoProps> ({
             query: ({id, ...body}) => ({
                 url: `/todos/${id}`,
                 method: "PUT",
@@ -47,7 +48,7 @@ export const api = createApi({
             invalidatesTags: ["Todos"]
         }),
 
-        deleteTodo: builder.mutation<Date, DeleteTodoProps> ({
+        deleteTodo: builder.mutation<Todo, DeleteTodoProps> ({
             query: ({id}) => ({
                 url: `/todos/${id}`,
                 method: "DELETE",
@@ -55,7 +56,7 @@ export const api = createApi({
             invalidatesTags: ["Todos"]
         }),
 
-        toggleTodo: builder.mutation<Date, ToggleTodoProps> ({
+        toggleTodo: builder.mutation<Todo, ToggleTodoProps> ({
             query: ({id}) => ({
                 url: `/todos/${id}/toggle`,
                 method: "PATCH",

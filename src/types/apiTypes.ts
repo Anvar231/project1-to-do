@@ -1,12 +1,7 @@
-export interface Data {
-    id: number;
-    text: string;
-    completed: boolean;
-    createdAt: string;
-}
+import type {Todo} from "./todo";
 
 export interface SuccessResponse {
-    data: Data[];
+    data: Todo[];
     total: number;
     page: number;
     limit: number;
