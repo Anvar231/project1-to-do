@@ -1,6 +1,6 @@
 import {SortBox, StyledSelect, StyledPagination} from "./ToDoList.styles.ts";
 import AddToDo from "../AddToDo/AddToDo";
-import {useCallback, useMemo, useState} from "react";
+import {useCallback, useMemo, useState, useEffect} from "react";
 import type {SelectChangeEvent} from "@mui/material"
 import {MenuItem} from "@mui/material";
 import {sortTodos} from "../../utils/sortTodos";
@@ -8,14 +8,16 @@ import {LimitCount, SortByCompleted, SortByDate} from "../../types/sortTypes";
 import SortedToDoList from "../SortedToDoList/SortedToDoList";
 import {useSearchParams} from "react-router-dom";
 import {useGetTodosQuery, usePostTodoMutation} from "../../store/api";
+import ErrorElement from "../ErrorElement/ErrorElement";
 
 export default function ToDoList() {
     const [searchParams, setSearchParams] = useSearchParams();
     const page = Number(searchParams.get("page") ?? 1);
     const limit = Number(searchParams.get("limit") ?? LimitCount.ten);
     const [limitCount, setLimitCount] = useState<LimitCount>(limit);
+    const [issue, setIssue] = useState("");
 
-    const {data} = useGetTodosQuery({page, limit: limitCount});
+    const {data, error, isError} = useGetTodosQuery({page, limit: limitCount});
     const [addTodo] = usePostTodoMutation();
 
     const [sortByDate, setSortByDate] = useState<SortByDate>(SortByDate.new);
@@ -24,6 +26,23 @@ export default function ToDoList() {
     const todosData = data ? data.data : [];
     const totalPages = data?.totalPages ?? 1;
 
+    useEffect(() => {
+        if (!data)
+            setIssue("Не удалось получить данные");
+        else if (
+            isError
+            && "data" in error
+            && typeof error.data === "object"
+            && error.data !== null
+            && "error" in error.data
+            && typeof error.data.error === "string"
+        )
+            setIssue(error.data.error);
+        else if (data)
+            setIssue("");
+        else
+            setIssue("Неизвестная ошибка");
+    });
 
 
     const sortedTodos = useMemo(
@@ -98,7 +117,12 @@ export default function ToDoList() {
                 </StyledSelect>
             </SortBox>
 
-            <SortedToDoList sortedTodos={sortedTodos} />
+            {
+                !issue?
+                    <SortedToDoList sortedTodos={sortedTodos}/>
+                    :
+                    <ErrorElement error={issue} />
+            }
 
             {totalPages > 1 && (
                 <StyledPagination
