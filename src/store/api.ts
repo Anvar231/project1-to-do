@@ -9,7 +9,7 @@ import type {
 } from "../types/apiTypes";
 import type {Todo} from "../types/todo";
 
-const API_URL = "http://localhost:3001";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const api = createApi({
     reducerPath: "api",
@@ -19,7 +19,7 @@ export const api = createApi({
     tagTypes: ["Todos"],
 
     endpoints: (builder) => ({
-        getTodos: builder.query<SuccessResponse, GetTodosProps> ({
+        getTodos: builder.query<SuccessResponse<Todo>, GetTodosProps> ({
             query: ({page, limit}) => ({
                 url: "/todos",
                 params: {
@@ -39,7 +39,7 @@ export const api = createApi({
             invalidatesTags: ["Todos"]
         }),
 
-        putTodo: builder.mutation<Todo, PutTodoProps> ({
+        updateTodo: builder.mutation<Todo, PutTodoProps> ({
             query: ({id, ...body}) => ({
                 url: `/todos/${id}`,
                 method: "PUT",
@@ -69,6 +69,6 @@ export const api = createApi({
 export const {
     useGetTodosQuery,
     usePostTodoMutation,
-    usePutTodoMutation,
+    useUpdateTodoMutation,
     useDeleteTodoMutation,
     useToggleTodoMutation} = api;

@@ -2,7 +2,7 @@ import ToDoItem from "../ToDoItem/ToDoItem";
 import {ListUl, StyledTypography} from "./SortedToDoList.styles";
 import type {Todo} from "../../types/todo";
 import {useState, useCallback, memo} from "react";
-import {useDeleteTodoMutation, usePutTodoMutation, useToggleTodoMutation} from "../../store/api";
+import {useDeleteTodoMutation, useUpdateTodoMutation, useToggleTodoMutation} from "../../store/api";
 
 interface SortedToDoListProps {
     sortedTodos: Todo[];
@@ -13,7 +13,7 @@ const SortedToDoList = memo(function ({sortedTodos} : SortedToDoListProps) {
 
     const [deleteTodo] = useDeleteTodoMutation();
     const [toggleTodo] = useToggleTodoMutation();
-    const [putTodo] = usePutTodoMutation();
+    const [updateTodo] = useUpdateTodoMutation();
 
     const handleDelete = useCallback(
         async (id: number) => {
@@ -38,10 +38,10 @@ const SortedToDoList = memo(function ({sortedTodos} : SortedToDoListProps) {
 
     const handleEdit = useCallback(
         async (id: number, editedText: string, completed: boolean) => {
-            await putTodo({id, text: editedText, completed})
+            await updateTodo({id, text: editedText, completed})
             setEditId(-1);
         },
-        [putTodo],
+        [updateTodo],
     );
 
     return (

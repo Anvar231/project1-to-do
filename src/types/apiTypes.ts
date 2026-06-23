@@ -1,8 +1,7 @@
-import type {Todo} from "./todo";
 import {LimitCount} from "./sortTypes";
 
-export interface SuccessResponse {
-    data: Todo[];
+export interface SuccessResponse<T> {
+    data: T[];
     total: number;
     page: number;
     limit: LimitCount;

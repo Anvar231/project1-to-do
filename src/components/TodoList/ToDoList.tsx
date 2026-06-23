@@ -9,6 +9,7 @@ import SortedToDoList from "../SortedToDoList/SortedToDoList";
 import {useSearchParams} from "react-router-dom";
 import {useGetTodosQuery, usePostTodoMutation} from "../../store/api";
 import ErrorElement from "../ErrorElement/ErrorElement";
+import getErrorMessage from "../../utils/getErrorMessage";
 
 export default function ToDoList() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -27,21 +28,12 @@ export default function ToDoList() {
     const totalPages = data?.totalPages ?? 1;
 
     useEffect(() => {
-        if (!data)
-            setIssue("Не удалось получить данные");
-        else if (
-            isError
-            && "data" in error
-            && typeof error.data === "object"
-            && error.data !== null
-            && "error" in error.data
-            && typeof error.data.error === "string"
-        )
-            setIssue(error.data.error);
-        else if (data)
+        if (isError) {
+            setIssue(getErrorMessage(error));
+        }
+        else {
             setIssue("");
-        else
-            setIssue("Неизвестная ошибка");
+        }
     });
 
 
