@@ -10,7 +10,7 @@ import React, {useState, useEffect, useRef, useCallback, memo} from "react";
 interface ToDoItemProps extends Todo{
     isEditing: boolean;
     onEditId: (id: number) => void;
-    onEdit: (id: number, editedText: string) => void;
+    onEdit: (id: number, editedText: string, completed: boolean) => void;
     onDelete: (id: number) => void;
     onToggle: (id: number) => void;
 }
@@ -42,9 +42,9 @@ const ToDoItem = memo(function ({id, text, completed, createdAt, onEditId, isEdi
                 return;
             }
             setError(false);
-            onEdit(id, editText);
+            onEdit(id, editText, completed);
         },
-        [editText, onEdit, id],
+        [editText, onEdit, id, completed],
     );
 
     const handleChange = useCallback(

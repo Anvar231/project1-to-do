@@ -8,3 +8,9 @@ export enum SortByCompleted {
     completed = "completed",
     nonCompleted = "non-completed"
 }
+
+export enum LimitCount {
+    five = 5,
+    ten = 10,
+    fifteen = 15
+}

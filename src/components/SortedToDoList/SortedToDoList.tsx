@@ -2,40 +2,31 @@ import ToDoItem from "../ToDoItem/ToDoItem";
 import {ListUl, StyledTypography} from "./SortedToDoList.styles";
 import type {Todo} from "../../types/todo";
 import {useState, useCallback, memo} from "react";
-import type {Dispatch, SetStateAction} from "react";
+import {useDeleteTodoMutation, useUpdateTodoMutation, useToggleTodoMutation} from "../../store/api";
 
 interface SortedToDoListProps {
     sortedTodos: Todo[];
-    setTodos: Dispatch<SetStateAction<Todo[]>>;
 }
 
-const SortedToDoList = memo(function ({sortedTodos, setTodos} : SortedToDoListProps) {
+const SortedToDoList = memo(function ({sortedTodos} : SortedToDoListProps) {
     const [editId, setEditId] = useState(-1);
 
+    const [deleteTodo] = useDeleteTodoMutation();
+    const [toggleTodo] = useToggleTodoMutation();
+    const [updateTodo] = useUpdateTodoMutation();
+
     const handleDelete = useCallback(
-        (id: number) => {
-            setTodos((list: Todo[]) => (
-                list.filter(item => item.id !== id)
-            ));
+        async (id: number) => {
+            await deleteTodo({id});
         },
-        [setTodos],
+        [deleteTodo],
     );
 
     const handleToggle = useCallback(
-        (id: number) => {
-            setTodos((list: Todo[]) => (
-                list.map(item => (
-                    item.id === id?
-                        {
-                            ...item,
-                            completed: !item.completed,
-                        }
-                        :
-                        item
-                ))
-            ));
+        async (id: number) => {
+            await toggleTodo({id})
         },
-        [setTodos],
+        [toggleTodo],
     );
 
     const handleEditId = useCallback(
@@ -46,21 +37,11 @@ const SortedToDoList = memo(function ({sortedTodos, setTodos} : SortedToDoListPr
     );
 
     const handleEdit = useCallback(
-        (id: number, editedText: string) => {
-            setTodos((list: Todo[]) => (
-                list.map(item => (
-                    item.id !== id?
-                        item
-                        :
-                        {
-                            ...item,
-                            text: editedText
-                        }
-                ))
-            ))
+        async (id: number, editedText: string, completed: boolean) => {
+            await updateTodo({id, text: editedText, completed})
             setEditId(-1);
         },
-        [setTodos],
+        [updateTodo],
     );
 
     return (

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Box, Select} from "@mui/material";
+import {Box, Pagination, Select} from "@mui/material";
 
 export const SortBox = styled(Box)`
   display: flex;
@@ -19,3 +19,14 @@ export const StyledSelect = styled(Select)`
     }
 `
 
+export const StyledPagination = styled(Pagination)`
+  && {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  && *{
+      color: ${({theme}) => theme.secondary};
+    }
+`
